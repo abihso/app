@@ -1,5 +1,7 @@
-{
+import 'dotenv/config';
+export default {
   "expo": {
+    
     "name": "abihsolo",
     "slug": "abihsolo",
     "version": "1.0.0",
@@ -44,7 +46,8 @@
       },
       "eas": {
         "projectId": "cc0f1130-ca6f-4c4a-8aeb-fc2e22ffb3f6"
-      }
+      },
+      "env": process.env.NODE_ENV
     }
   }
 }

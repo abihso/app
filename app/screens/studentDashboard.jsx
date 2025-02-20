@@ -105,52 +105,45 @@ const studentDashboard = () => {
     fetchData()
     
   } ,[])
-   const handleTermChange = () => {
-     const requestData = {
-      term:selectedTerm,
+  const handleTermChange = (e) => {
+    e.preventDefault();
+    let semesterData = {
+      term : selectedTerm,
       id:studentInfor.id,
       class:studentInfor.class
-     }
-     const url = `http://abihsolo.com/api/user/student/marks`;
-     axios
-       .post(url, requestData)
-       .then((response) => {
-         setTimeout(() => {
-           const combinedData = response.data.exams
-             .map((exam) => {
-               const matchingClass = response.data.class.find(
-                 (cls) =>
-                   {
-                    cls.subject === exam.subject &&
-                   cls.studentid === exam.studentid
-                  }
-               );
-               let grade = ""
-               let remarks = ""
-               if(Number(matchingClass.mark) + Number(exam.mark) < 80){
-                grade = "A+"
-                remarks = "Great"
-               }
-               return matchingClass
-                 ? {
-                     subject: exam.subject,
-                     classMark: Number(matchingClass.mark), // Convert to number
-                     examMark: Number(exam.mark),
-                     total: Number(matchingClass.mark) + Number(exam.mark),
-                     
-                   }
-                 : null; // Exclude entries without a match
-             })
-             .filter((item) => item !== null);
-           setPreparedData(combinedData);
-           console.log(combinedData)
-         }, 1000);
-       })
-       .catch(() => {
-         console.log("Results will be announced if ready");
-       });
-   };
+    }
   
+    const url = `https://abihsolo.com/api/user/student/marks`;
+    axios
+      .post(url, semesterData)
+      .then((response) => {
+        setTimeout(() => {
+          const combinedData = response.data.exams
+            .map((exam) => {
+              const matchingClass = response.data.class.find(
+                (cls) =>
+                  cls.subject === exam.subject &&
+                  cls.studentid === exam.studentid
+              );
+
+              return matchingClass
+                ? {
+                    subject: exam.subject,
+                    classMark: Number(matchingClass.mark), // Convert to number
+                    examMark: Number(exam.mark),
+                    total: Number(matchingClass.mark) + Number(exam.mark),
+                  }
+                : null; // Exclude entries without a match
+            })
+            .filter((item) => item !== null);
+          setPreparedData(combinedData);
+          
+        }, 1000);
+      })
+      .catch(() => {
+        alert("Results will be announced if ready");
+      });
+  };
   const handleEtestCode = async () => {
     if(testCode.length > 2){
       await AsyncStorage.setItem("testCode",testCode)
@@ -530,12 +523,12 @@ const studentDashboard = () => {
             <View className="col-span-2">
               <Text className="font-bold text-white text-center ">Total</Text>
             </View>
-            <View className="col-span-2">
+            {/* <View className="col-span-2">
               <Text className="font-bold text-white text-center ">Grade</Text>
-            </View>
-            <View className="col-span-2">
+            </View> */}
+            {/* <View className="col-span-2">
               <Text className="font-bold text-white text-center ">Remarks</Text>
-            </View>
+            </View> */}
           </View>
           {preparedData.map((items, index) => (
             <View
@@ -565,7 +558,7 @@ const studentDashboard = () => {
                   {items.total}
                 </Text>
               </View>
-              <View className="col-span-2">
+              {/* <View className="col-span-2">
                 <Text className="font-bold text-black text-center ">
                     A+
                   </Text>
@@ -576,7 +569,7 @@ const studentDashboard = () => {
                 <Text className="font-bold text-black text-center ">
                   Remarks
                 </Text>
-              </View>
+              </View> */}
             </View>
           ))}
           <Button
